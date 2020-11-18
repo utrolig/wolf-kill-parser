@@ -1,0 +1,21 @@
+.Wrapper {
+  display: flex;
+  height: 100%;
+  padding: 24px;
+}
+
+.Lines {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-right: 12px;
+}
+
+.Placeholder {
+  font-size: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
