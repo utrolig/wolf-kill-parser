@@ -9,6 +9,8 @@ type TextShadow = {
 
 export type TextAlignValue = "left" | "right" | "center";
 
+export type ConsoleSettings = ReturnType<typeof useConsoleSettings>;
+
 export function useConsoleSettings() {
   const [fontSize, setFontSize] = useState(14);
   const [fontFamily, setFontFamily] = useState("Roboto");

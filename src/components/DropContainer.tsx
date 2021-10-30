@@ -1,16 +1,16 @@
 import React, { useState } from "react";
-import { parseConsole, TextPart } from "../util/parseConsole";
+import { parseConsole, ParsedOutput } from "../util/parseConsole";
 import styles from "./DropContainer.module.css";
 
 export type DropContainerProps = {
-  onFileDropped: (textParts: TextPart[][]) => void;
+  onFileDropped: (textParts: ParsedOutput) => void;
 };
 
 export const DropContainer: React.FC<DropContainerProps> = ({
   onFileDropped,
   children,
 }) => {
-  const [isDraggingOver, setIsDraggingOver] = useState(false);
+  const [_, setIsDraggingOver] = useState(false);
 
   const onDrop = async (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -19,9 +19,8 @@ export const DropContainer: React.FC<DropContainerProps> = ({
     if (e.dataTransfer.files.length) {
       const [selectedFile] = e.dataTransfer.files;
       const text = await selectedFile.text();
-      const { kills, youKilled } = parseConsole(text);
-      console.log(kills);
-      onFileDropped(kills[0]);
+      const output = parseConsole(text);
+      onFileDropped(output);
     }
   };
 

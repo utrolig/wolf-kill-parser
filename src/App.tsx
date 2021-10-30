@@ -2,23 +2,27 @@ import React, {
   CSSProperties,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
 import styles from "./App.module.css";
 import { DropContainer } from "./components/DropContainer";
-import { TextPart } from "./util/parseConsole";
+import { ParsedOutput } from "./util/parseConsole";
 import { ConsoleSettings } from "./components/ConsoleSettings";
 import { useConsoleSettings } from "./hooks/useConsoleSettings";
 import html2canvas from "html2canvas";
 import { ImageDialog } from "./components/ImageDialog";
+import { LinesManager } from "./components/LinesManager";
 
 const linkId = "font";
 
 export const App: React.FC = () => {
-  const [lines, setLines] = useState<TextPart[][]>([]);
+  const [lines, setLines] = useState<ParsedOutput>({
+    kills: [],
+    youKilled: [],
+  });
   const [dataUrl, setDataUrl] = useState("");
-  const linesRef = useRef<HTMLDivElement>(null);
   const consoleSettings = useConsoleSettings();
 
   useEffect(() => {
@@ -44,11 +48,11 @@ export const App: React.FC = () => {
 
   const containerStyle: CSSProperties = { fontFamily };
 
-  const onFileDropped = (lines: TextPart[][]) => {
+  const onFileDropped = (lines: ParsedOutput) => {
     setLines(lines);
   };
 
-  const getTextShadowValue = () => {
+  const textShadowValue = useMemo(() => {
     const {
       textShadow: { color, blur, h, v },
     } = consoleSettings;
@@ -58,19 +62,18 @@ export const App: React.FC = () => {
     }
 
     return "none";
-  };
-
-  const generatePng = useCallback(async () => {
-    if (!linesRef.current) return;
-
-    const canvas = await html2canvas(linesRef.current, {
-      backgroundColor: null,
-    });
-    const url = canvas.toDataURL("image/png");
-    setDataUrl(url);
   }, []);
 
-  if (!lines.length) {
+  const generatePng = useCallback(async () => {
+    // if (!linesRef.current) return;
+    // const canvas = await html2canvas(linesRef.current, {
+    //   backgroundColor: null,
+    // });
+    // const url = canvas.toDataURL("image/png");
+    // setDataUrl(url);
+  }, []);
+
+  if (!lines.kills.length) {
     return (
       <DropContainer onFileDropped={onFileDropped}>
         <div className={styles.Placeholder}>Drop your file here!</div>
@@ -81,27 +84,11 @@ export const App: React.FC = () => {
   return (
     <DropContainer onFileDropped={onFileDropped}>
       <div className={styles.Wrapper} style={containerStyle}>
-        <div ref={linesRef} className={styles.Lines}>
-          {lines.map((line, idx) => (
-            <div
-              style={{
-                marginBottom: consoleSettings.lineSpacing,
-                textShadow: getTextShadowValue(),
-                textAlign: consoleSettings.textAlign,
-              }}
-              key={idx}
-            >
-              {line.map(({ color, text }, i) => (
-                <span
-                  style={{ color, fontSize: consoleSettings.fontSize }}
-                  key={i}
-                >
-                  {text}
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
+        <LinesManager
+          consoleSettings={consoleSettings}
+          lines={lines}
+          textShadowValue={textShadowValue}
+        />
         <ImageDialog imgSrc={dataUrl} onCloseRequested={() => setDataUrl("")} />
         <ConsoleSettings
           onGenerateClicked={generatePng}
