@@ -19,8 +19,9 @@ export const DropContainer: React.FC<DropContainerProps> = ({
     if (e.dataTransfer.files.length) {
       const [selectedFile] = e.dataTransfer.files;
       const text = await selectedFile.text();
-      const consoleLines = parseConsole(text);
-      onFileDropped(consoleLines);
+      const { kills, youKilled } = parseConsole(text);
+      console.log(kills);
+      onFileDropped(kills[0]);
     }
   };
 

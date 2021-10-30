@@ -38,38 +38,70 @@ const colorMap: [string, string][] = [
   ["/ O o ¯ Ï ï", "#ffff7f"],
 ];
 
-export const parseConsole = (text: string) => {
+export type ParsedOutput = {
+  kills: Array<TextPart[][]>;
+  youKilled: TextPart[][];
+};
+
+const splitByColorDelimiters = (s: string) => s.split(/(?=\^.)/g);
+const removeSkipNotify = (s: string) => s.replace(/\[skipnotify\]/g, "");
+const toColoredParts = (parts: string[]) =>
+  parts.map((part) => {
+    const text = part.replace(/\^./g, "");
+    const matches = part.match(/\^./)!;
+    if (!matches?.length) {
+      const textPart: TextPart = {
+        color: "#ffffff",
+        text,
+      };
+      return textPart;
+    }
+
+    const [colorCode] = matches;
+
+    const colorChar = colorCode.replace("^", "");
+
+    const textPart: TextPart = {
+      color: colorMap.find(([chars, color]) => chars.includes(colorChar))![1],
+      text,
+    };
+
+    return textPart;
+  });
+
+export const parseConsole = (text: string): ParsedOutput => {
+  const maxSimoultaneousLines = 4;
   const lines = text.split("\n");
   const kills = lines
     .filter((s) => s.includes("was"))
-    .map((s) => s.replace(/\[skipnotify\]/g, ""))
-    .map((s) => s.split(/(?=\^.)/g))
-    .map((parts) =>
-      parts.map((part) => {
-        const text = part.replace(/\^./g, "");
-        const matches = part.match(/\^./)!;
-        if (!matches?.length) {
-          const textPart: TextPart = {
-            color: "#ffffff",
-            text,
-          };
-          return textPart;
-        }
+    .map(removeSkipNotify)
+    .map(splitByColorDelimiters)
+    .map(toColoredParts)
+    .reduce((acc, line, idx) => {
+      if (idx === 0) {
+        return [[line]];
+      }
 
-        const [colorCode] = matches;
+      const lastLineCollection = acc[acc.length - 1];
 
-        const colorChar = colorCode.replace("^", "");
+      if (idx >= maxSimoultaneousLines) {
+        const newLineCollection = [...lastLineCollection.slice(1), line];
+        return [...acc, newLineCollection];
+      }
 
-        const textPart: TextPart = {
-          color: colorMap.find(([chars, color]) =>
-            chars.includes(colorChar)
-          )![1],
-          text,
-        };
+      return [...acc, [...lastLineCollection, line]];
+    }, [] as Array<TextPart[][]>);
 
-        return textPart;
-      })
-    );
+  const youKilled = lines
+    .filter((s) => s.includes("was"))
+    .map(removeSkipNotify)
+    .map((line) => {
+      const victimEndIdx = line.indexOf(" was");
+      const final = `You killed ${line.substring(0, victimEndIdx)}`;
+      return final;
+    })
+    .map(splitByColorDelimiters)
+    .map(toColoredParts);
 
-  return kills;
+  return { kills, youKilled };
 };
