@@ -75,6 +75,7 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
 
     if (!name) return;
     const {
+      consoleScrollDownwards,
       fontFamily,
       textShadow,
       youKilledBottomOffset,
@@ -88,6 +89,7 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
     } = settings;
 
     const currentSettings = {
+      consoleScrollDownwards,
       fontFamily,
       textShadow,
       youKilledBottomOffset,
@@ -164,6 +166,29 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
           {fonts.map(({ family }) => (
             <option key={family} value={family}>
               {family}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl style={{ width: "100%", marginTop: 18 }}>
+        <InputLabel shrink id="font-family">
+          Killfeed direction
+        </InputLabel>
+        <Select
+          labelId="font-family"
+          id="font-family-select"
+          value={settings.consoleScrollDownwards}
+          native
+          onChange={(e) =>
+            settings.setConsoleScrollDownwards(Number(e.target.value))
+          }
+        >
+          {[
+            { value: 1, name: "Downwards" },
+            { value: 0, name: "Upwards" },
+          ].map(({ name, value }) => (
+            <option key={name} value={value}>
+              {name}
             </option>
           ))}
         </Select>

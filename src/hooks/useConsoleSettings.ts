@@ -22,6 +22,7 @@ export type SettingsObject = {
   killFeedTopOffset: number;
   killFeedLeftOffset: number;
   maxKillFeedLines: number;
+  consoleScrollDownwards: number;
   resolution: {
     height: number;
     width: number;
@@ -48,6 +49,7 @@ export function useConsoleSettings() {
   const [killFeedTopOffset, setKillFeedTopOffset] = useState<number>(32);
   const [killFeedLeftOffset, setKillFeedLeftOffset] = useState<number>(32);
   const [maxKillFeedLines, setMaxKillFeedLines] = useState<number>(4);
+  const [consoleScrollDownwards, setConsoleScrollDownwards] = useState(1);
 
   const updateSettings = useCallback((params: SettingsObject) => {
     setKillsFontsize(params.killsFontSize);
@@ -60,9 +62,11 @@ export function useConsoleSettings() {
     setKillFeedLeftOffset(params.killFeedLeftOffset);
     setMaxKillFeedLines(params.maxKillFeedLines);
     setResolution(params.resolution);
+    setConsoleScrollDownwards(params.consoleScrollDownwards);
   }, []);
 
   return {
+    consoleScrollDownwards,
     killsFontSize,
     fontFamily,
     lineSpacing,
@@ -73,6 +77,7 @@ export function useConsoleSettings() {
     killFeedLeftOffset,
     maxKillFeedLines,
     resolution,
+    setConsoleScrollDownwards,
     setFontFamily,
     setKillsFontsize,
     setLineSpacing,

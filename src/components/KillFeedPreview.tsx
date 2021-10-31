@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import { ConsoleSettings } from "../hooks/useConsoleSettings";
 import { TextPart } from "../util/parseConsole";
 import html2canvas from "html2canvas";
@@ -45,6 +45,14 @@ export const KillFeedPreview: React.FC<KillFeedPreviewProps> = ({
     save();
   }, [shouldSave]);
 
+  const linesWithDirection = useMemo(() => {
+    if (consoleSettings.consoleScrollDownwards) {
+      return lines;
+    }
+
+    return [...lines].reverse();
+  }, [consoleSettings.consoleScrollDownwards, lines]);
+
   return (
     <div
       ref={linesRef}
@@ -56,7 +64,7 @@ export const KillFeedPreview: React.FC<KillFeedPreviewProps> = ({
         display: isVisible ? "flex" : "none",
       }}
     >
-      {lines.map((line, idx) => (
+      {linesWithDirection.map((line, idx) => (
         <div
           style={{
             fontSize: consoleSettings.killsFontSize,
