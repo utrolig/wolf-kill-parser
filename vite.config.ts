@@ -43,10 +43,10 @@ const getEnv = (mode: string) => {
 // https://vitejs.dev/config/
 export default ({ mode }) =>
   defineConfig({
-    plugins: [
-      reactRefresh(),
-      svgr()
-    ],
+    build: {
+      outDir: "build",
+    },
+    plugins: [reactRefresh(), svgr()],
     define: {
       ...getEnv(mode),
     },
