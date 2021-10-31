@@ -7,19 +7,15 @@ import { fonts } from "../assets/fonts";
 import styles from "./ConsoleSettings.module.css";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
 import Slider from "@material-ui/core/Slider";
 import TextField from "@material-ui/core/TextField";
-import { Button } from "@material-ui/core";
 
 export type ConsoleSettingsProps = {
-  onGenerateClicked: () => void;
   settings: ReturnType<typeof useConsoleSettings>;
 };
 
 export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
-  onGenerateClicked,
   settings,
 }) => {
   return (
@@ -42,30 +38,78 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
           ))}
         </Select>
       </FormControl>
-      <FormControl style={{ marginTop: 12 }}>
-        <InputLabel shrink id="text-align">
-          Text align
-        </InputLabel>
-        <Select
-          labelId="text-align"
-          id="text-align-select"
-          value={settings.textAlign}
-          native
-          onChange={(e) =>
-            settings.setTextAlign(e.target.value as TextAlignValue)
+      <FormControl style={{ width: "100%", marginTop: 12 }}>
+        <InputLabel shrink>You killed Fontsize</InputLabel>
+        <Slider
+          style={{ marginTop: 18 }}
+          onChange={(e, newValue) =>
+            settings.setYouKilledFontsize(newValue as number)
           }
-        >
-          <option value="left">Left</option>
-          <option value="center">Center</option>
-          <option value="right">Right</option>
-        </Select>
+          value={settings.youKilledFontSize}
+          aria-labelledby="discrete-slider-small-steps"
+          step={0.5}
+          marks
+          min={8}
+          max={120}
+          valueLabelDisplay="auto"
+        />
+      </FormControl>
+      <FormControl style={{ width: "100%", marginTop: 12 }}>
+        <InputLabel shrink>You killed bottom offset</InputLabel>
+        <Slider
+          style={{ marginTop: 18 }}
+          onChange={(e, newValue) =>
+            settings.setYouKilledBottomOffset(newValue as number)
+          }
+          value={settings.youKilledBottomOffset}
+          aria-labelledby="discrete-slider-small-steps"
+          step={0.5}
+          marks
+          min={0}
+          max={800}
+          valueLabelDisplay="auto"
+        />
+      </FormControl>
+      <FormControl style={{ width: "100%", marginTop: 12 }}>
+        <InputLabel shrink>Kill feed top offset</InputLabel>
+        <Slider
+          style={{ marginTop: 18 }}
+          onChange={(e, newValue) =>
+            settings.setKillFeedTopOffset(newValue as number)
+          }
+          value={settings.killFeedTopOffset}
+          aria-labelledby="discrete-slider-small-steps"
+          step={0.5}
+          marks
+          min={8}
+          max={48}
+          valueLabelDisplay="auto"
+        />
+      </FormControl>
+      <FormControl style={{ width: "100%", marginTop: 12 }}>
+        <InputLabel shrink>Kill feed left offset</InputLabel>
+        <Slider
+          style={{ marginTop: 18 }}
+          onChange={(e, newValue) =>
+            settings.setKillFeedLeftOffset(newValue as number)
+          }
+          value={settings.killFeedLeftOffset}
+          aria-labelledby="discrete-slider-small-steps"
+          step={0.5}
+          marks
+          min={8}
+          max={48}
+          valueLabelDisplay="auto"
+        />
       </FormControl>
       <FormControl style={{ width: "100%", marginTop: 12 }}>
         <InputLabel shrink>Font Size</InputLabel>
         <Slider
           style={{ marginTop: 18 }}
-          onChange={(e, newValue) => settings.setFontSize(newValue as number)}
-          value={settings.fontSize}
+          onChange={(e, newValue) =>
+            settings.setKillsFontsize(newValue as number)
+          }
+          value={settings.killsFontSize}
           aria-labelledby="discrete-slider-small-steps"
           step={0.5}
           marks
@@ -142,14 +186,6 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
           variant="outlined"
         />
       </FormControl>
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={onGenerateClicked}
-        style={{ marginTop: 12 }}
-      >
-        Generate .png
-      </Button>
     </div>
   );
 };

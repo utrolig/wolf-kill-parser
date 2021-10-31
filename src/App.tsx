@@ -11,7 +11,6 @@ import { DropContainer } from "./components/DropContainer";
 import { ParsedOutput } from "./util/parseConsole";
 import { ConsoleSettings } from "./components/ConsoleSettings";
 import { useConsoleSettings } from "./hooks/useConsoleSettings";
-import html2canvas from "html2canvas";
 import { ImageDialog } from "./components/ImageDialog";
 import { LinesManager } from "./components/LinesManager";
 
@@ -62,16 +61,7 @@ export const App: React.FC = () => {
     }
 
     return "none";
-  }, []);
-
-  const generatePng = useCallback(async () => {
-    // if (!linesRef.current) return;
-    // const canvas = await html2canvas(linesRef.current, {
-    //   backgroundColor: null,
-    // });
-    // const url = canvas.toDataURL("image/png");
-    // setDataUrl(url);
-  }, []);
+  }, [consoleSettings.textShadow]);
 
   if (!lines.kills.length) {
     return (
@@ -90,10 +80,7 @@ export const App: React.FC = () => {
           textShadowValue={textShadowValue}
         />
         <ImageDialog imgSrc={dataUrl} onCloseRequested={() => setDataUrl("")} />
-        <ConsoleSettings
-          onGenerateClicked={generatePng}
-          settings={consoleSettings}
-        />
+        <ConsoleSettings settings={consoleSettings} />
       </div>
     </DropContainer>
   );

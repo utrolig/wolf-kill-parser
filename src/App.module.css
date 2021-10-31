@@ -4,11 +4,32 @@
   padding: 24px;
 }
 
-.Lines {
+.YouKilled {
+  align-items: center;
+  justify-content: flex-end;
+  padding-bottom: 10%;
+}
+
+.Box {
   display: flex;
+  flex: 1;
+}
+
+.Lines {
+  display: none;
   flex: 1;
   flex-direction: column;
   margin-right: 12px;
+}
+
+.Visible {
+  display: flex;
+}
+
+.FullSize {
+  position: fixed;
+  height: 1080px;
+  width: 1920px;
 }
 
 .Placeholder {

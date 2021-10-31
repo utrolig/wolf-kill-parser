@@ -2,4 +2,33 @@
   display: flex;
   flex: 1;
   flex-direction: column;
+  position: relative;
+}
+
+.Button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.Overlay {
+  z-index: 999;
+  background-color: #0e0e10;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 36px;
+  align-items: center;
+  justify-content: center;
+}
+
+.Right {
+  right: 24px;
+}
+
+.Left {
+  left: 24px;
 }
