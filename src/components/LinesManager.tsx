@@ -148,7 +148,12 @@ export const LinesManager: React.FC<LinesManagerProps> = ({
       >
         {`>`}
       </button>
-      <Button onClick={onGenerateClicked} color="primary" variant="contained">
+      <Button
+        style={{ marginRight: 18 }}
+        onClick={onGenerateClicked}
+        color="primary"
+        variant="contained"
+      >
         Generate ZIP file
       </Button>
       {shouldSave && <div className={styles.Overlay}>Generating zip...</div>}

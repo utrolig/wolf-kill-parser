@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   TextAlignValue,
+  SettingsObject,
   useConsoleSettings,
 } from "../hooks/useConsoleSettings";
 import { fonts } from "../assets/fonts";
@@ -10,14 +11,116 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import Slider from "@material-ui/core/Slider";
 import TextField from "@material-ui/core/TextField";
+import { Button, ButtonGroup } from "@material-ui/core";
 
 export type ConsoleSettingsProps = {
   settings: ReturnType<typeof useConsoleSettings>;
 };
 
+const SettingsLocalStorageKey = "killparser.settings";
+
 export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
   settings,
 }) => {
+  const [settingsList, setSettingsList] = useState<
+    Record<string, SettingsObject>
+  >({});
+  const [selectedSavedSetting, setSelectedSaveSetting] = useState<string>("");
+  useEffect(() => {
+    const savedSettingsList = window.localStorage.getItem(
+      SettingsLocalStorageKey
+    );
+
+    if (savedSettingsList) {
+      try {
+        const parsedSettingsList = JSON.parse(savedSettingsList) as Record<
+          string,
+          SettingsObject
+        >;
+        setSettingsList(parsedSettingsList);
+
+        const keys = Object.keys(parsedSettingsList);
+
+        if (keys.length) {
+          setSelectedSaveSetting(keys[0]);
+        }
+      } catch (err) {
+        console.warn("Error while parsing settings list, clearing.");
+        window.localStorage.removeItem(SettingsLocalStorageKey);
+      }
+    }
+  }, []);
+
+  const deleteCurrentSettings = () => {
+    const keys = Object.keys(settingsList);
+
+    const newKeys = keys.filter((s) => s !== selectedSavedSetting);
+
+    const newSettingsList = newKeys.reduce((acc, item) => {
+      acc[item] = settingsList[item];
+      return acc;
+    }, {} as Record<string, SettingsObject>);
+
+    if (newKeys.length) {
+      setSelectedSaveSetting(newKeys[0]);
+    } else {
+      setSelectedSaveSetting("");
+    }
+
+    setSettingsList(newSettingsList);
+  };
+
+  const saveCurrentSettings = () => {
+    const name = window.prompt("Enter a name for the current settings");
+
+    if (!name) return;
+    const {
+      fontFamily,
+      textShadow,
+      youKilledBottomOffset,
+      youKilledFontSize,
+      killFeedLeftOffset,
+      killsFontSize,
+      killFeedTopOffset,
+      lineSpacing,
+      maxKillFeedLines,
+    } = settings;
+
+    const currentSettings = {
+      fontFamily,
+      textShadow,
+      youKilledBottomOffset,
+      youKilledFontSize,
+      killFeedLeftOffset,
+      killsFontSize,
+      killFeedTopOffset,
+      lineSpacing,
+      maxKillFeedLines,
+      name,
+    };
+
+    const allSettings = {
+      ...settingsList,
+      [name]: currentSettings,
+    };
+
+    window.localStorage.setItem(
+      SettingsLocalStorageKey,
+      JSON.stringify(allSettings)
+    );
+    setSettingsList({
+      ...settingsList,
+      [name]: currentSettings,
+    });
+
+    setSelectedSaveSetting(name);
+  };
+
+  const loadSelectedSetting = () => {
+    const currentSetting = settingsList[selectedSavedSetting];
+    settings.updateSettings(settingsList[selectedSavedSetting]);
+  };
+
   return (
     <div className={styles.container}>
       <FormControl>
@@ -37,6 +140,22 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
             </option>
           ))}
         </Select>
+      </FormControl>
+      <FormControl style={{ width: "100%", marginTop: 12 }}>
+        <InputLabel shrink>Max number of killfeed lines</InputLabel>
+        <Slider
+          style={{ marginTop: 18 }}
+          onChange={(e, newValue) =>
+            settings.setMaxKillFeedLines(newValue as number)
+          }
+          value={settings.maxKillFeedLines}
+          aria-labelledby="discrete-slider-small-steps"
+          step={1}
+          marks
+          min={3}
+          max={10}
+          valueLabelDisplay="auto"
+        />
       </FormControl>
       <FormControl style={{ width: "100%", marginTop: 12 }}>
         <InputLabel shrink>You killed Fontsize</InputLabel>
@@ -63,7 +182,7 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
           }
           value={settings.youKilledBottomOffset}
           aria-labelledby="discrete-slider-small-steps"
-          step={0.5}
+          step={1}
           marks
           min={0}
           max={800}
@@ -79,7 +198,7 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
           }
           value={settings.killFeedTopOffset}
           aria-labelledby="discrete-slider-small-steps"
-          step={0.5}
+          step={1}
           marks
           min={8}
           max={48}
@@ -95,7 +214,7 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
           }
           value={settings.killFeedLeftOffset}
           aria-labelledby="discrete-slider-small-steps"
-          step={0.5}
+          step={1}
           marks
           min={8}
           max={48}
@@ -185,6 +304,36 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
           }
           variant="outlined"
         />
+      </FormControl>
+      <FormControl style={{ width: "100%", marginTop: 18 }}>
+        <InputLabel shrink id="saved-settings">
+          Saved settings
+        </InputLabel>
+        <Select
+          labelId="saved-settings"
+          placeholder="Saved settings"
+          id="saved-settings-select"
+          value={selectedSavedSetting}
+          native
+          onChange={(e) => setSelectedSaveSetting(e.target.value as string)}
+        >
+          {Object.keys(settingsList).map((name) => (
+            <option key={name} value={name}>
+              {name}
+            </option>
+          ))}
+        </Select>
+        <ButtonGroup fullWidth style={{ marginTop: 18 }}>
+          <Button onClick={loadSelectedSetting} variant="contained">
+            Load
+          </Button>
+          <Button onClick={deleteCurrentSettings} variant="contained">
+            Delete
+          </Button>
+          <Button onClick={saveCurrentSettings} variant="contained">
+            Save
+          </Button>
+        </ButtonGroup>
       </FormControl>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 type TextShadow = {
   h: number;
@@ -11,21 +11,47 @@ export type TextAlignValue = "left" | "right" | "center";
 
 export type ConsoleSettings = ReturnType<typeof useConsoleSettings>;
 
+export type SettingsObject = {
+  name: string;
+  killsFontSize: number;
+  youKilledFontSize: number;
+  fontFamily: string;
+  lineSpacing: number;
+  textShadow: TextShadow;
+  youKilledBottomOffset: number;
+  killFeedTopOffset: number;
+  killFeedLeftOffset: number;
+  maxKillFeedLines: number;
+};
+
 export function useConsoleSettings() {
   const [killsFontSize, setKillsFontsize] = useState(20);
   const [youKilledFontSize, setYouKilledFontsize] = useState(48);
   const [fontFamily, setFontFamily] = useState("Roboto");
   const [lineSpacing, setLineSpacing] = useState(6);
   const [textShadow, setTextShadow] = useState<TextShadow>({
-    h: 0,
-    v: 0,
-    blur: 0,
-    color: "#fff",
+    h: 2,
+    v: 2,
+    blur: 1,
+    color: "#000",
   });
   const [youKilledBottomOffset, setYouKilledBottomOffset] =
-    useState<number>(280);
+    useState<number>(200);
   const [killFeedTopOffset, setKillFeedTopOffset] = useState<number>(32);
   const [killFeedLeftOffset, setKillFeedLeftOffset] = useState<number>(32);
+  const [maxKillFeedLines, setMaxKillFeedLines] = useState<number>(4);
+
+  const updateSettings = useCallback((params: SettingsObject) => {
+    setKillsFontsize(params.killsFontSize);
+    setYouKilledFontsize(params.youKilledFontSize);
+    setFontFamily(params.fontFamily);
+    setLineSpacing(params.lineSpacing);
+    setTextShadow(params.textShadow);
+    setYouKilledBottomOffset(params.youKilledBottomOffset);
+    setKillFeedTopOffset(params.killFeedTopOffset);
+    setKillFeedLeftOffset(params.killFeedLeftOffset);
+    setMaxKillFeedLines(params.maxKillFeedLines);
+  }, []);
 
   return {
     killsFontSize,
@@ -36,6 +62,7 @@ export function useConsoleSettings() {
     youKilledBottomOffset,
     killFeedTopOffset,
     killFeedLeftOffset,
+    maxKillFeedLines,
     setFontFamily,
     setKillsFontsize,
     setLineSpacing,
@@ -44,5 +71,7 @@ export function useConsoleSettings() {
     setKillFeedLeftOffset,
     setKillFeedTopOffset,
     setYouKilledBottomOffset,
+    setMaxKillFeedLines,
+    updateSettings,
   };
 }

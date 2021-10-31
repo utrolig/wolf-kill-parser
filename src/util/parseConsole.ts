@@ -69,8 +69,10 @@ const toColoredParts = (parts: string[]) =>
     return textPart;
   });
 
-export const parseConsole = (text: string): ParsedOutput => {
-  const maxSimoultaneousLines = 4;
+export const parseConsole = (
+  text: string,
+  maxKillFeedLines: number
+): ParsedOutput => {
   const lines = text.split("\n");
   const kills = lines
     .filter((s) => s.includes("was"))
@@ -84,7 +86,7 @@ export const parseConsole = (text: string): ParsedOutput => {
 
       const lastLineCollection = acc[acc.length - 1];
 
-      if (idx >= maxSimoultaneousLines) {
+      if (idx >= maxKillFeedLines) {
         const newLineCollection = [...lastLineCollection.slice(1), line];
         return [...acc, newLineCollection];
       }

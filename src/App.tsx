@@ -8,7 +8,7 @@ import React, {
 } from "react";
 import styles from "./App.module.css";
 import { DropContainer } from "./components/DropContainer";
-import { ParsedOutput } from "./util/parseConsole";
+import { parseConsole, ParsedOutput } from "./util/parseConsole";
 import { ConsoleSettings } from "./components/ConsoleSettings";
 import { useConsoleSettings } from "./hooks/useConsoleSettings";
 import { ImageDialog } from "./components/ImageDialog";
@@ -17,6 +17,7 @@ import { LinesManager } from "./components/LinesManager";
 const linkId = "font";
 
 export const App: React.FC = () => {
+  const [rawLines, setRawLines] = useState<string>("");
   const [lines, setLines] = useState<ParsedOutput>({
     kills: [],
     youKilled: [],
@@ -47,9 +48,15 @@ export const App: React.FC = () => {
 
   const containerStyle: CSSProperties = { fontFamily };
 
-  const onFileDropped = (lines: ParsedOutput) => {
-    setLines(lines);
+  const onFileDropped = (lines: string) => {
+    setRawLines(lines);
+    const parsedLines = parseConsole(lines, consoleSettings.maxKillFeedLines);
+    setLines(parsedLines);
   };
+
+  useEffect(() => {
+    setLines(parseConsole(rawLines, consoleSettings.maxKillFeedLines));
+  }, [consoleSettings.maxKillFeedLines]);
 
   const textShadowValue = useMemo(() => {
     const {
@@ -65,14 +72,20 @@ export const App: React.FC = () => {
 
   if (!lines.kills.length) {
     return (
-      <DropContainer onFileDropped={onFileDropped}>
+      <DropContainer
+        maxKillFeedLines={consoleSettings.maxKillFeedLines}
+        onFileDropped={onFileDropped}
+      >
         <div className={styles.Placeholder}>Drop your file here!</div>
       </DropContainer>
     );
   }
 
   return (
-    <DropContainer onFileDropped={onFileDropped}>
+    <DropContainer
+      maxKillFeedLines={consoleSettings.maxKillFeedLines}
+      onFileDropped={onFileDropped}
+    >
       <div className={styles.Wrapper} style={containerStyle}>
         <LinesManager
           consoleSettings={consoleSettings}
