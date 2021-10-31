@@ -3,6 +3,7 @@ import { ConsoleSettings } from "../hooks/useConsoleSettings";
 import { TextPart } from "../util/parseConsole";
 import html2canvas from "html2canvas";
 import { DownloadedImage } from "../util/types";
+import { settings } from "cluster";
 
 export type YouKilledPreviewProps = {
   activeComponent: "youKilled" | "kills";
@@ -50,10 +51,10 @@ export const YouKilledPreview: React.FC<YouKilledPreviewProps> = ({
     const save = async () => {
       const canvas = await html2canvas(linesRef.current!, {
         backgroundColor: null,
-        windowWidth: 1920,
-        windowHeight: 1080,
-        height: 1080,
-        width: 1920,
+        windowWidth: consoleSettings.resolution.width,
+        windowHeight: consoleSettings.resolution.height,
+        height: consoleSettings.resolution.height,
+        width: consoleSettings.resolution.width,
       });
       const file = await canvasToBlob(canvas);
       const name = `${imagePrefix}-${idx + 1}.png`;

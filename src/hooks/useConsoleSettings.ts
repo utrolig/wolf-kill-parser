@@ -22,6 +22,10 @@ export type SettingsObject = {
   killFeedTopOffset: number;
   killFeedLeftOffset: number;
   maxKillFeedLines: number;
+  resolution: {
+    height: number;
+    width: number;
+  };
 };
 
 export function useConsoleSettings() {
@@ -35,6 +39,10 @@ export function useConsoleSettings() {
     blur: 1,
     color: "#000",
   });
+  const [resolution, setResolution] = useState<{
+    height: number;
+    width: number;
+  }>({ height: 1080, width: 1920 });
   const [youKilledBottomOffset, setYouKilledBottomOffset] =
     useState<number>(200);
   const [killFeedTopOffset, setKillFeedTopOffset] = useState<number>(32);
@@ -51,6 +59,7 @@ export function useConsoleSettings() {
     setKillFeedTopOffset(params.killFeedTopOffset);
     setKillFeedLeftOffset(params.killFeedLeftOffset);
     setMaxKillFeedLines(params.maxKillFeedLines);
+    setResolution(params.resolution);
   }, []);
 
   return {
@@ -63,6 +72,7 @@ export function useConsoleSettings() {
     killFeedTopOffset,
     killFeedLeftOffset,
     maxKillFeedLines,
+    resolution,
     setFontFamily,
     setKillsFontsize,
     setLineSpacing,
@@ -72,6 +82,7 @@ export function useConsoleSettings() {
     setKillFeedTopOffset,
     setYouKilledBottomOffset,
     setMaxKillFeedLines,
+    setResolution,
     updateSettings,
   };
 }

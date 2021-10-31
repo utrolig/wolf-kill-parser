@@ -84,6 +84,7 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
       killFeedTopOffset,
       lineSpacing,
       maxKillFeedLines,
+      resolution,
     } = settings;
 
     const currentSettings = {
@@ -96,6 +97,7 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
       killFeedTopOffset,
       lineSpacing,
       maxKillFeedLines,
+      resolution,
       name,
     };
 
@@ -117,12 +119,37 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
   };
 
   const loadSelectedSetting = () => {
-    const currentSetting = settingsList[selectedSavedSetting];
     settings.updateSettings(settingsList[selectedSavedSetting]);
   };
 
   return (
     <div className={styles.container}>
+      <FormControl style={{ width: "100%", marginTop: 18 }}>
+        <TextField
+          label="Width"
+          value={settings.resolution.width}
+          style={{ marginBottom: 18 }}
+          variant="outlined"
+          onChange={(e) =>
+            settings.setResolution({
+              ...settings.resolution,
+              width: Number(e.target.value),
+            })
+          }
+        />
+        <TextField
+          label="Height"
+          value={settings.resolution.height}
+          variant="outlined"
+          style={{ marginBottom: 18 }}
+          onChange={(e) =>
+            settings.setResolution({
+              ...settings.resolution,
+              height: Number(e.target.value),
+            })
+          }
+        />
+      </FormControl>
       <FormControl>
         <InputLabel shrink id="font-family">
           Font Family

@@ -149,7 +149,7 @@ export const LinesManager: React.FC<LinesManagerProps> = ({
         {`>`}
       </button>
       <Button
-        style={{ marginRight: 18 }}
+        style={{ marginRight: 18, marginLeft: 18, marginBottom: 18 }}
         onClick={onGenerateClicked}
         color="primary"
         variant="contained"
