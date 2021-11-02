@@ -7,8 +7,6 @@ type TextShadow = {
   color: string;
 };
 
-export type TextAlignValue = "left" | "right" | "center";
-
 export type ConsoleSettings = ReturnType<typeof useConsoleSettings>;
 
 export type SettingsObject = {
@@ -19,10 +17,12 @@ export type SettingsObject = {
   lineSpacing: number;
   textShadow: TextShadow;
   youKilledBottomOffset: number;
-  killFeedTopOffset: number;
-  killFeedLeftOffset: number;
+  killFeedXOffset: number;
+  killFeedYOffset: number;
   maxKillFeedLines: number;
   consoleScrollDownwards: number;
+  killFeedPositionY: number;
+  killFeedPositionX: number;
   resolution: {
     height: number;
     width: number;
@@ -46,48 +46,73 @@ export function useConsoleSettings() {
   }>({ height: 1080, width: 1920 });
   const [youKilledBottomOffset, setYouKilledBottomOffset] =
     useState<number>(200);
-  const [killFeedTopOffset, setKillFeedTopOffset] = useState<number>(32);
-  const [killFeedLeftOffset, setKillFeedLeftOffset] = useState<number>(32);
+  const [killFeedYOffset, setKillFeedYOffset] = useState<number>(32);
+  const [killFeedXOffset, setKillFeedXOffset] = useState<number>(32);
   const [maxKillFeedLines, setMaxKillFeedLines] = useState<number>(4);
   const [consoleScrollDownwards, setConsoleScrollDownwards] = useState(1);
+  const [killFeedPositionX, setKillFeedPositionX] = useState(0);
+  const [killFeedPositionY, setKillFeedPositionY] = useState(0);
 
-  const updateSettings = useCallback((params: SettingsObject) => {
-    setKillsFontsize(params.killsFontSize);
-    setYouKilledFontsize(params.youKilledFontSize);
-    setFontFamily(params.fontFamily);
-    setLineSpacing(params.lineSpacing);
-    setTextShadow(params.textShadow);
-    setYouKilledBottomOffset(params.youKilledBottomOffset);
-    setKillFeedTopOffset(params.killFeedTopOffset);
-    setKillFeedLeftOffset(params.killFeedLeftOffset);
-    setMaxKillFeedLines(params.maxKillFeedLines);
-    setResolution(params.resolution);
-    setConsoleScrollDownwards(params.consoleScrollDownwards);
-  }, []);
+  const updateSettings = useCallback(
+    ({
+      killFeedYOffset,
+      youKilledFontSize,
+      consoleScrollDownwards,
+      fontFamily,
+      killFeedPositionX,
+      killFeedPositionY,
+      killFeedXOffset,
+      killsFontSize,
+      lineSpacing,
+      maxKillFeedLines,
+      resolution,
+      textShadow,
+      youKilledBottomOffset,
+    }: SettingsObject) => {
+      setConsoleScrollDownwards(consoleScrollDownwards);
+      setFontFamily(fontFamily);
+      setKillFeedXOffset(killFeedXOffset);
+      setKillFeedYOffset(killFeedYOffset);
+      setKillFeedPositionX(killFeedPositionX);
+      setKillFeedPositionY(killFeedPositionY);
+      setKillsFontsize(killsFontSize);
+      setLineSpacing(lineSpacing);
+      setMaxKillFeedLines(maxKillFeedLines);
+      setResolution(resolution);
+      setTextShadow(textShadow);
+      setYouKilledBottomOffset(youKilledBottomOffset);
+      setYouKilledFontsize(youKilledFontSize);
+    },
+    []
+  );
 
   return {
     consoleScrollDownwards,
-    killsFontSize,
     fontFamily,
+    killFeedPositionX,
+    killFeedPositionY,
+    killFeedXOffset,
+    killFeedYOffset,
+    killsFontSize,
     lineSpacing,
-    textShadow,
-    youKilledFontSize,
-    youKilledBottomOffset,
-    killFeedTopOffset,
-    killFeedLeftOffset,
     maxKillFeedLines,
     resolution,
+    textShadow,
+    youKilledBottomOffset,
+    youKilledFontSize,
     setConsoleScrollDownwards,
     setFontFamily,
+    setKillFeedXOffset,
+    setKillFeedYOffset,
+    setKillFeedPositionX,
+    setKillFeedPositionY,
     setKillsFontsize,
     setLineSpacing,
-    setTextShadow,
-    setYouKilledFontsize,
-    setKillFeedLeftOffset,
-    setKillFeedTopOffset,
-    setYouKilledBottomOffset,
     setMaxKillFeedLines,
     setResolution,
+    setTextShadow,
+    setYouKilledBottomOffset,
+    setYouKilledFontsize,
     updateSettings,
   };
 }

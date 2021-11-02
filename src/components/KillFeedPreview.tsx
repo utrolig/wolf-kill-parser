@@ -1,4 +1,10 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React, {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+} from "react";
 import { ConsoleSettings } from "../hooks/useConsoleSettings";
 import { TextPart } from "../util/parseConsole";
 import html2canvas from "html2canvas";
@@ -57,11 +63,14 @@ export const KillFeedPreview: React.FC<KillFeedPreviewProps> = ({
     <div
       ref={linesRef}
       style={{
+        alignItems: getFlexAlignmentValue(consoleSettings.killFeedPositionX),
         flex: 1,
         flexDirection: "column",
-        paddingTop: consoleSettings.killFeedTopOffset,
-        paddingLeft: consoleSettings.killFeedLeftOffset,
+        justifyContent: getFlexAlignmentValue(
+          consoleSettings.killFeedPositionY
+        ),
         display: isVisible ? "flex" : "none",
+        padding: `${consoleSettings.killFeedYOffset}px ${consoleSettings.killFeedXOffset}px`,
       }}
     >
       {linesWithDirection.map((line, idx) => (
@@ -96,3 +105,16 @@ const canvasToBlob = (canvas: HTMLCanvasElement): Promise<Blob> =>
 
     canvas.toBlob(callback, "image/png", 1);
   });
+
+const getFlexAlignmentValue = (value: number) => {
+  switch (value) {
+    case 0:
+      return "flex-start";
+    case 1:
+      return "flex-end";
+    case 2:
+      return "center";
+    default:
+      return "flex-start";
+  }
+};

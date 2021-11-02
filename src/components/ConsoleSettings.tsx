@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import {
-  TextAlignValue,
   SettingsObject,
   useConsoleSettings,
 } from "../hooks/useConsoleSettings";
@@ -80,9 +79,11 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
       textShadow,
       youKilledBottomOffset,
       youKilledFontSize,
-      killFeedLeftOffset,
+      killFeedXOffset,
+      killFeedYOffset,
+      killFeedPositionX,
+      killFeedPositionY,
       killsFontSize,
-      killFeedTopOffset,
       lineSpacing,
       maxKillFeedLines,
       resolution,
@@ -94,9 +95,11 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
       textShadow,
       youKilledBottomOffset,
       youKilledFontSize,
-      killFeedLeftOffset,
+      killFeedXOffset,
+      killFeedYOffset,
+      killFeedPositionX,
+      killFeedPositionY,
       killsFontSize,
-      killFeedTopOffset,
       lineSpacing,
       maxKillFeedLines,
       resolution,
@@ -166,6 +169,54 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
           {fonts.map(({ family }) => (
             <option key={family} value={family}>
               {family}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl style={{ width: "100%", marginTop: 18 }}>
+        <InputLabel shrink id="font-family">
+          Killfeed position Y
+        </InputLabel>
+        <Select
+          labelId="font-family"
+          id="font-family-select"
+          value={settings.killFeedPositionY}
+          native
+          onChange={(e) =>
+            settings.setKillFeedPositionY(Number(e.target.value))
+          }
+        >
+          {[
+            { value: 2, name: "Center" },
+            { value: 1, name: "Bottom" },
+            { value: 0, name: "Top" },
+          ].map(({ name, value }) => (
+            <option key={name} value={value}>
+              {name}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl style={{ width: "100%", marginTop: 18 }}>
+        <InputLabel shrink id="font-family">
+          Killfeed position X
+        </InputLabel>
+        <Select
+          labelId="font-family"
+          id="font-family-select"
+          value={settings.killFeedPositionX}
+          native
+          onChange={(e) =>
+            settings.setKillFeedPositionX(Number(e.target.value))
+          }
+        >
+          {[
+            { value: 2, name: "Center" },
+            { value: 1, name: "Right" },
+            { value: 0, name: "Left" },
+          ].map(({ name, value }) => (
+            <option key={name} value={value}>
+              {name}
             </option>
           ))}
         </Select>
@@ -242,13 +293,13 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
         />
       </FormControl>
       <FormControl style={{ width: "100%", marginTop: 12 }}>
-        <InputLabel shrink>Kill feed top offset</InputLabel>
+        <InputLabel shrink>Kill feed Y offset</InputLabel>
         <Slider
           style={{ marginTop: 18 }}
           onChange={(e, newValue) =>
-            settings.setKillFeedTopOffset(newValue as number)
+            settings.setKillFeedYOffset(newValue as number)
           }
-          value={settings.killFeedTopOffset}
+          value={settings.killFeedYOffset}
           aria-labelledby="discrete-slider-small-steps"
           step={1}
           marks
@@ -258,13 +309,13 @@ export const ConsoleSettings: React.FC<ConsoleSettingsProps> = ({
         />
       </FormControl>
       <FormControl style={{ width: "100%", marginTop: 12 }}>
-        <InputLabel shrink>Kill feed left offset</InputLabel>
+        <InputLabel shrink>Kill feed X offset</InputLabel>
         <Slider
           style={{ marginTop: 18 }}
           onChange={(e, newValue) =>
-            settings.setKillFeedLeftOffset(newValue as number)
+            settings.setKillFeedXOffset(newValue as number)
           }
-          value={settings.killFeedLeftOffset}
+          value={settings.killFeedXOffset}
           aria-labelledby="discrete-slider-small-steps"
           step={1}
           marks
