@@ -3,7 +3,6 @@ import { ConsoleSettings } from "../hooks/useConsoleSettings";
 import { TextPart } from "../util/parseConsole";
 import html2canvas from "html2canvas";
 import { DownloadedImage } from "../util/types";
-import { settings } from "cluster";
 
 export type YouKilledPreviewProps = {
   activeComponent: "youKilled" | "kills";
@@ -62,7 +61,14 @@ export const YouKilledPreview: React.FC<YouKilledPreviewProps> = ({
     };
 
     save();
-  }, [shouldSave]);
+  }, [
+    consoleSettings.resolution.height,
+    consoleSettings.resolution.width,
+    idx,
+    imagePrefix,
+    onImageSaved,
+    shouldSave,
+  ]);
 
   return (
     <div

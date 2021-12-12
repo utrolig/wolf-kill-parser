@@ -40,8 +40,8 @@ export const KillFeedPreview: React.FC<KillFeedPreviewProps> = ({
     const save = async () => {
       const canvas = await html2canvas(linesRef.current!, {
         backgroundColor: null,
-        height: 1080,
-        width: 1920,
+        height: consoleSettings.resolution.height,
+        width: consoleSettings.resolution.width,
       });
       const file = await canvasToBlob(canvas);
       const name = `${imagePrefix}-${idx + 1}.png`;

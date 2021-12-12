@@ -43,7 +43,7 @@ export const LinesManager: React.FC<LinesManagerProps> = ({
     return (
       activeComponent === "youKilled" && currentIdx === youKilled.length - 1
     );
-  }, [activeComponent, currentIdx]);
+  }, [activeComponent, currentIdx, youKilled.length]);
 
   const goBack = useCallback(() => {
     if (activeComponent === "youKilled" && currentIdx === 0) {
@@ -52,7 +52,7 @@ export const LinesManager: React.FC<LinesManagerProps> = ({
     } else {
       setCurrentIdx(currentIdx - 1);
     }
-  }, [activeComponent, currentIdx, lines]);
+  }, [activeComponent, currentIdx, kills.length]);
 
   const goForward = useCallback(() => {
     if (activeComponent === "kills" && currentIdx === kills.length - 1) {
@@ -61,7 +61,7 @@ export const LinesManager: React.FC<LinesManagerProps> = ({
     } else {
       setCurrentIdx(currentIdx + 1);
     }
-  }, [activeComponent, currentIdx, lines]);
+  }, [activeComponent, currentIdx, kills.length]);
 
   useEffect(() => {
     setActiveComponent("kills");
@@ -93,7 +93,7 @@ export const LinesManager: React.FC<LinesManagerProps> = ({
     };
 
     downloadFiles();
-  }, [files, shouldSave]);
+  }, [files, kills.length, shouldSave, youKilled.length]);
 
   if (!lines) {
     return null;
